@@ -1,0 +1,161 @@
+
+======================================================================
+  INTERACTIVE GYM SCHEDULER — with Relocation Consent
+======================================================================
+  Slots :  6:00, 7:00, 8:00, 16:00, 17:00, 18:00, 19:00
+  Rule  : Students get their preferred slot first.
+          If full, they are relocated to the nearest available slot.
+          Relocated students can accept, pick another slot, or cancel.
+
+  Number of students: 5
+  Slot capacity per gym per hour: 1
+
+  ── Student 1 ──
+  Gender (M/F): M
+  Year (1–4): 1
+  Preferred slot (6, 7, 8, 16, 17, 18, 19): 7
+  Travel time (minutes): 15
+
+  ── Student 2 ──
+  Gender (M/F): F
+  Year (1–4): 3
+  Preferred slot (6, 7, 8, 16, 17, 18, 19): 7
+  Travel time (minutes): 10
+
+  ── Student 3 ──
+  Gender (M/F): M
+  Year (1–4): 2
+  Preferred slot (6, 7, 8, 16, 17, 18, 19): 7
+  Travel time (minutes): 4
+
+  ── Student 4 ──
+  Gender (M/F): M
+  Year (1–4): 4
+  Preferred slot (6, 7, 8, 16, 17, 18, 19): 7
+  Travel time (minutes): 12
+
+  ── Student 5 ──
+  Gender (M/F): M
+  Year (1–4): 1
+  Preferred slot (6, 7, 8, 16, 17, 18, 19): 7
+  Travel time (minutes): 12
+
+======================================================================
+  STAGE 1 — Network Flow (Edmonds-Karp)
+======================================================================
+  Max flow: 5 / 14 (35.7% utilisation)
+
+  Peak slots (auto-detected from demand): 7:00
+
+======================================================================
+  STAGE 2 — Priority Scheduling (Min-Heap)
+======================================================================
+  Assigned: 5  |  Waiting: 0
+
+======================================================================
+  STAGE 3 — Bin Packing Load Balancer (FFD)
+======================================================================
+  Rebalanced: 3 student(s) spread from congested to lighter slots
+  Load Imbalance Index: 2.8 → 2.8 (lower is better)
+
+======================================================================
+  INITIAL ASSIGNMENT (before relocation consent)
+======================================================================
+  S001 | M | Year 1 | Pref=7:00 → Gym A @ 7:00 | Score=0.925 | ✓ Preferred
+  S005 | M | Year 1 | Pref=7:00 → Gym A @ 18:00 | Score=0.72 | ↻ Relocated
+  S002 | F | Year 3 | Pref=7:00 → Gym B @ 7:00 | Score=0.95 | ✓ Preferred
+  S003 | M | Year 2 | Pref=7:00 → Gym A @ 19:00 | Score=0.74 | ↻ Relocated
+  S004 | M | Year 4 | Pref=7:00 → Gym A @ 17:00 | Score=0.74 | ↻ Relocated
+
+  Slot    6:00  7:00  8:00  16:00  17:00  18:00  19:00  
+  Gym A     0     1     0     0     1     1     1   
+  Gym B     0     1     0     0     0     0     0   
+
+======================================================================
+  RELOCATION CONSENT — 3 student(s) were relocated
+======================================================================
+  Processing order: Juniors first → Seniors last
+  Juniors may claim slots temporarily held by relocated seniors.
+  Each student can pick a slot, AUTO-pick, or CANCEL entirely.
+
+
+  ┌─ S005 (Gender=M, Year=1)
+  │  Preferred : 7:00
+  │  Assigned  : Gym A @ 18:00  (relocated)
+  │  Travel    : 12 min
+  └─ Satisfaction: 0.72
+
+  All selectable slots for Gym A:
+    [1] 6:00  (load: 0/1)
+    [2] 8:00  (load: 0/1)
+    [3] 16:00  (load: 0/1)
+    [4] 18:00  (load: 0/1)  (← currently assigned)
+    [5] 17:00  (load: 1/1)  (held by S004 Yr4 — claimable)
+    [6] 19:00  (load: 1/1)  (held by S003 Yr2 — claimable)
+    [A] AUTO   — system picks the best empty slot for you
+    [C] CANCEL — decline entirely (free your slot)
+
+  Your choice: 2
+  ✓ Moved to Gym A @ 8:00
+
+  ┌─ S003 (Gender=M, Year=2)
+  │  Preferred : 7:00
+  │  Assigned  : Gym A @ 19:00  (relocated)
+  │  Travel    : 4 min
+  └─ Satisfaction: 0.74
+
+  All selectable slots for Gym A:
+    [1] 6:00  (load: 0/1)
+    [2] 16:00  (load: 0/1)
+    [3] 18:00  (load: 0/1)
+    [4] 19:00  (load: 0/1)  (← currently assigned)
+    [5] 17:00  (load: 1/1)  (held by S004 Yr4 — claimable)
+    [A] AUTO   — system picks the best empty slot for you
+    [C] CANCEL — decline entirely (free your slot)
+
+  Your choice: 1
+  ✓ Moved to Gym A @ 6:00
+
+  ┌─ S004 (Gender=M, Year=4)
+  │  Preferred : 7:00
+  │  Assigned  : Gym A @ 17:00  (relocated)
+  │  Travel    : 12 min
+  └─ Satisfaction: 0.74
+
+  All selectable slots for Gym A:
+    [1] 16:00  (load: 0/1)
+    [2] 17:00  (load: 0/1)  (← currently assigned)
+    [3] 18:00  (load: 0/1)
+    [4] 19:00  (load: 0/1)
+    [A] AUTO   — system picks the best empty slot for you
+    [C] CANCEL — decline entirely (free your slot)
+
+  Your choice: A
+  ✓ Auto-assigned to Gym A @ 16:00
+
+======================================================================
+  FINAL RESULTS
+======================================================================
+  Assigned : 5
+  Waiting  : 0
+  Utility  : 2.395
+  Satisfaction : 4.515
+  Congestion   : 0
+  Avg Travel   : 10.6 min
+
+  ASSIGNED STUDENTS
+  ----------------------------------------------------------------------
+  S001 | M | Year 1 | Pref=7:00 → Gym A @ 7:00 | Score=0.925 | ✓ Preferred
+  S005 | M | Year 1 | Pref=7:00 → Gym A @ 8:00 | Score=0.92 | ↻ Relocated
+  S002 | F | Year 3 | Pref=7:00 → Gym B @ 7:00 | Score=0.95 | ✓ Preferred
+  S003 | M | Year 2 | Pref=7:00 → Gym A @ 6:00 | Score=0.96 | ↻ Relocated
+  S004 | M | Year 4 | Pref=7:00 → Gym A @ 16:00 | Score=0.76 | ↻ Relocated
+
+  WAITING LIST
+  ----------------------------------------------------------------------
+  (none)
+
+  Slot    6:00  7:00  8:00  16:00  17:00  18:00  19:00  
+  Gym A     1     1     1     1     0     0     0   
+  Gym B     0     1     0     0     0     0     0   
+
